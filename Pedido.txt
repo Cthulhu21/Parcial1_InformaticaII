@@ -1,0 +1,17 @@
+Programar tiempos en base a los créditos
+
+1. Gestionar Información en el sistema: Cursos // Guardando información en archivos
+2. Gestionasr Información de los horarios
+3. Gestionar Jornadas de Estudio
+1 Credito son 48 horas
+
+HTP=((48*NC)/16)-HTD
+
+Cursos
+Código	Nombre 		Horas De Trabajo Asistidas por el docente	Horas de Trabajo Personales	Número De Creditos
+2547200	Informatica II	7						calcularlas			5
+
+
+Asignar Horario
+Codigo	Horario
+2547200	MJ8-10	L

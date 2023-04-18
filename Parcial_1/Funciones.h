@@ -99,6 +99,7 @@ void Reiniciar(char* Arreglo, unsigned int Tamano)
 
 void CopiarA(char *Arreglo, char *Arreglo2, unsigned int Tamano)
 {
+    //Copia Arreglo a Arreglo2
     for(unsigned int i=0; i< Tamano; i++)
     {
         *(Arreglo2+i)=*(Arreglo+i);
