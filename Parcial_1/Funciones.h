@@ -8,8 +8,9 @@
 void CargarMaterias(char Codigos[20][7], char Nombres[20][40], char *Teoricas, char *Independientes, char *Creditos, char Horarios[20][40]);
 void Reiniciar(char* Arreglo, unsigned int Tamano);
 void CopiarA(char *Arreglo, char *Arreglo2, unsigned int Tamano);
-void GestionHorario(char Horario[7][24], char Codigos[20][7], char Nombres[20][40], char Creditos[20],  char Horarios[20][40]);
+void GestionHorario(char Horario[168][7], char Codigos[20][7], char Nombres[20][40], char Creditos[20],  char Horarios[20][40]);
 void MostrarOferta(char Codigos[20][7], char Nombres[20][40],char Creditos[20],char Horarios[20][40]);
+void MeterEnHorario(char Horario[168][7], char Codigo[7], char HorariosMaterias[40]);
 
 void CargarMaterias(char Codigos[20][7], char Nombres[20][40], char *Teoricas, char *Independientes, char *Creditos, char Horarios[20][40])
 {
@@ -129,18 +130,104 @@ void CalculoIndependientes(char *Teoricas, char *Independientes, char *Creditos)
     }
 }
 
-void GestionHorario(char Horario[7][24], char Codigos[20][7], char Nombres[20][40], char Creditos[20], char Horarios[20][40])
+void GestionHorario(char Horario[168][7], char Codigos[20][7], char Nombres[20][40], char Creditos[20], char Horarios[20][40])
 {
     using namespace std;
     {
-        std::cout<<"A continuacion se le mostraran las materias ofertadas y usted elegira cuales desea cursar 1 a 1" << std::endl;
-        char Entrada[2]={};
+        cout<<"A continuacion se le mostraran las materias ofertadas y usted elegira cuales desea cursar 1 a 1" <<endl;
+        char Entrada={};
         do
         {
             MostrarOferta(Codigos, Nombres, Creditos, Horarios);
             cout<< "Ingrese el numero de la materia que desea registrar en su horario (0 para salir)" << endl;
             cin >> Entrada;
-        }while(Entrada[0]==true);
+            if(Entrada!=48)
+            {
+                MeterEnHorario(Horario, Codigos[Entrada-49], Horarios[Entrada-49]);
+            }
+        }while(Entrada!=48);
+    }
+}
+
+void MeterEnHorario(char Horario[168][7], char Codigo[7], char HorarioMateria[40])
+{
+    using namespace std;
+    //char Dia[3]={}, Horas[3]={};
+    unsigned int Dia[3]={}, Horas[3]={}, Duracion[3]={};
+    unsigned int Iterador=0;
+    for(int i=0; i<40; i++)
+    {
+        char Letra=HorarioMateria[i];
+        if(Letra=='\0')
+        {
+            break;
+        }
+        if(Letra>64 and Letra<91)
+        {
+            switch (Letra) {
+            case 'L':
+                Dia[Iterador]=1;
+                break;
+            case 'M':
+                Dia[Iterador]=2;
+                break;
+            case 'W':
+                Dia[Iterador]=3;
+                break;
+            case 'J':
+                Dia[Iterador]=4;
+                break;
+            case 'V':
+                Dia[Iterador]=5;
+                break;
+            case 'S':
+                Dia[Iterador]=6;
+                break;
+            case 'D':
+                Dia[Iterador]=7;
+                break;
+            default:
+                break;
+            }
+            //Dia[Iterador]=Letra;
+            unsigned int NumTemp=0;
+            NumTemp=(HorarioMateria[i+1]-48)*10+(HorarioMateria[i+2]-48);
+            Horas[Iterador]=NumTemp;
+            unsigned int Decena1=(HorarioMateria[i+3]-48)*10;
+            unsigned int Unidad1=(HorarioMateria[i+4]-48);
+            unsigned int Decena2=(HorarioMateria[i+1]-48)*10;
+            unsigned int Unidad2=(HorarioMateria[i+2]-48);
+            NumTemp=Decena1+Unidad1-Decena2-Unidad2;
+            Duracion[Iterador]=NumTemp;
+            //char Hora[]={HorarioMateria[i+1], HorarioMateria[i+2]};
+            Iterador+=1;
+        }
+    }
+    for(int i=0; i<3; i++)
+    {
+        if(Dia[i]==0)
+        {
+            break;
+        }
+        unsigned int HoraSemanal=(Dia[i]-1)*24+Horas[i];
+        unsigned int temp=0;
+        if(Horario[HoraSemanal][0]==0)
+        {
+            while(temp<Duracion[i])
+            {
+                for(int j=0; j<7; j++)
+                {
+                    Horario[HoraSemanal+temp][j]=Codigo[j];
+                }
+                temp+=1;
+            }
+        }
+        else
+        {
+            cout << "Lo sentimos, en este horario presenta incompatibilidad" << endl;
+            break;
+        }
+
     }
 }
 
