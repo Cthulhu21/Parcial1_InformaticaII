@@ -1,0 +1,7 @@
+2559101:Algebra y Trigonometria:4:0:3:L0810W0810
+2559121:Geometria Vectorial y Analitica:4:0:3:M1012J1012
+2559131:Calculo Diferencial:4:0:3:W1416V1416
+2567101:Descubriendo la Fisica:5:0:3:M1618J1618
+2570101:Informatica I:7:0:4:S1214S1821L1416
+2565101:Vivamos la Universidad:2:0:1:L1214
+2540101:Ingles l:4:0:1:W1620

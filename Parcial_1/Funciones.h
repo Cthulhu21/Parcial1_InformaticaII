@@ -148,7 +148,7 @@ void MostrarOferta(char Codigos[20][7], char Nombres[20][40],char Creditos[20], 
 {
     using namespace std;
     {
-        cout << "Numero\tCodigo\t\tNombre\t\t\t\t\tCreditos\n";
+        cout << "Numero\tCodigo\t\tNombre\t\t\t\t\tCreditos\tHorarios\n";
         unsigned int Tamano=0;
         for(int i=0; i<20;i++)
         {
@@ -169,13 +169,13 @@ void MostrarOferta(char Codigos[20][7], char Nombres[20][40],char Creditos[20], 
             for(int j=0; j<40; j++) //Mostrar Nombres
             {
                 cout << Nombres[i][j];
-                if(Nombres[i][j]=='0')
+                if(Nombres[i][j]=='\0')
                 {
-                    cout<<"\t";
+                    cout<<"\t\t\t";
                     break;
                 }
             }
-            cout << Creditos[i]; //Mostrar Creditos
+            cout << Creditos[i]<<"\t"; //Mostrar Creditos
             for(int j=0; j<40; j++)
             {
                 if(Horarios[i][j]=='\0')
