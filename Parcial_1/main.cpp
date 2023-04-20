@@ -9,5 +9,7 @@ int main()
     CalculoIndependientes(Teoricas, Independientes, Creditos);
     char Horario[168][7]={};
     GestionHorario(Horario, Codigos, Nombres, Creditos, Horarios);
+    char HorarioRecomendado[168][7]={};
+    RecomendarHorario(HorarioRecomendado, Horario, Codigos, Teoricas, Independientes);
     return 0;
 }
