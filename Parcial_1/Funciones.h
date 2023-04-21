@@ -11,7 +11,10 @@ void CopiarA(char *Arreglo, char *Arreglo2, unsigned int Tamano);
 void GestionHorario(char Horario[168][7], char Codigos[20][7], char Nombres[20][40], char Creditos[20],  char Horarios[20][40]);
 void MostrarOferta(char Codigos[20][7], char Nombres[20][40],char Creditos[20],char Horarios[20][40]);
 void MeterEnHorario(char Horario[168][7], char Codigo[7], char HorariosMaterias[40]);
-void CopiarArreglo(char A[20][7], char B[20][7]);
+void MostrarHorario(char Horario[168][7], char Codigos[20][7], char Nombres[20][40]);
+void MostrarNombreDeCodigo(char Codigo[7], char Codigos[20][7], char Nombres[20][40], char Nombre[40]);
+void PosicionCodigo(char Codigo[7], char Codigos[20][7], unsigned int *Posicion);
+void MostrarHorario2(char Horario[168][7], char Codigos[20][7], char Nombres[20][40]);
 
 void CargarMaterias(char Codigos[20][7], char Nombres[20][40], char *Teoricas, char *Independientes, char *Creditos, char Horarios[20][40])
 {
@@ -281,11 +284,10 @@ void MostrarOferta(char Codigos[20][7], char Nombres[20][40],char Creditos[20], 
     };
 }
 
-void RecomendarHorario(char Recomendado[168][7],char Codigos[20][7], char Horario[168][7], char Teoricas[20], char Independientes[20])
+void RecomendarHorario(char Recomendado[168][7], char Codigos[20][7], char Nombres[20][40], char Horario[168][7], char Teoricas[20], char Independientes[20])
 {
     using namespace std;
-    char Materias[20][7];
-    CopiarArreglo(Codigos, Materias);
+    char Materias[20][7]={};
     unsigned int Iterador=0;
     for(unsigned int i=0; i<168; i++)
     {
@@ -345,53 +347,175 @@ void RecomendarHorario(char Recomendado[168][7],char Codigos[20][7], char Horari
     {
         char Codigo[7]={};
         unsigned int Iterador=0;
-        while(Iterador!=7)
+        if(Materias[i][0]!='\0')
         {
-            Codigo[Iterador]=Materias[i][Iterador];
-            Iterador+=1;
-        }
-        unsigned int Posicion=0;
-        for (int i = 0; i < 20; i++) { // Iterar sobre las filas
-            for (int j = 0; j < 7; j++) { // Iterar sobre las columnas
-                cout << Codigos[i][j] << " "; // Imprimir el valor en la posición i, j
+            while(Iterador!=7)
+            {
+                Codigo[Iterador]=Materias[i][Iterador];
+                Iterador+=1;
             }
-            cout << endl; // Imprimir un salto de línea al final de cada fila
+            unsigned int Posicion=-1;
+            PosicionCodigo(Codigo, Codigos, &Posicion);
+            unsigned int HorasIndependientes=Independientes[Posicion]-48;
+            unsigned int PosicionHoras=0;
+            while(HorasIndependientes>0)
+            {
+                if((PosicionHoras%24>6) and (PosicionHoras%24<22))
+                {
+                    if(Horario[PosicionHoras][0]=='\0')
+                    {
+                        unsigned int iterador=0;
+                        while(iterador<7)
+                        {
+                            Horario[PosicionHoras][iterador]=Codigo[iterador];
+                            iterador+=1;
+                        }
+                        HorasIndependientes-=1;
+                    }
+                    else
+                    {
+                        unsigned int Extra=(Horario[PosicionHoras][2]-48)*10%(Codigo[6]-28);
+                        PosicionHoras+=Extra;
+                    }
+                }
+                PosicionHoras+=2;
+                if(PosicionHoras>167)
+                {
+                    PosicionHoras-=167;
+                }
+            }
         }
-        for(unsigned int IteradorCodigos=0; IteradorCodigos<20; IteradorCodigos++)
+        else
         {
-            char Codigo_[7];
-            for(int i=0; i<7; i++)
-            {
-                Codigo_[i]=Codigos[IteradorCodigos][i];
-            }
-            cout << Codigo_<< endl;
-            for(unsigned int PosicionLetra=0; PosicionLetra<7; PosicionLetra++)
-            {
-                if(Codigo[PosicionLetra]!=Codigos[IteradorCodigos][PosicionLetra])
-                {
-                    break;
-                }
-                if(PosicionLetra==6)
-                {
-                    Posicion=IteradorCodigos;
-                }
-            }
-            if(Posicion!=0)
-            {
-                break;
-            }
+            MostrarHorario(Horario, Codigos, Nombres);
+            break;
         }
-        char HorasIndependientes=Independientes[Posicion];
+
     }
 }
 
-void CopiarArreglo(char A[20][7], char B[20][7])
+
+void MostrarHorario(char Horario[168][7], char Codigos[20][7], char Nombres[20][40])
 {
-    for(int i = 0; i < 20; ++i)
+    using namespace std;
+    cout << "\tLunes\tMartes\tMiercoles\tJueves\tViernes\tSabado\tDomingo\n";
+    for(unsigned int i=0; i<24; i++)
     {
-        for(int j = 0; j < 7; ++j)
+        char Codigo[7]={};
+        unsigned int Dia=0;
+        cout << i << "\t";
+        while(Dia<7)
         {
-            B[i][j] = A[i][j];
+            unsigned int iteradorletras=0;
+            while (iteradorletras<7)
+            {
+                Codigo[iteradorletras]=Horario[(i+(Dia*24))][iteradorletras];
+                iteradorletras+=1;
+            }
+            char Nombre[40];
+            MostrarNombreDeCodigo(Codigo, Codigos, Nombres, Nombre);
+            Dia+=1;
+        }
+        cout << endl;
+    }
+}
+
+/*void MostrarHorario2(char Horario[168][7], char Codigos[20][7], char Nombres[20][40])
+{
+    using namespace std;
+    unsigned int Dia=0;
+    while (Dia<7)
+    {
+        switch (Dia)
+        {
+        case 0:
+            cout << "Lunes\t";
+            break;
+        case 1:
+            cout << "Martes\t";
+            break;
+        case 2:
+            cout << "Miercoles\t";
+            break;
+        case 3:
+            cout << "Jueves\t";
+            break;
+        case 4:
+            cout << "Viernes\t";
+            break;
+        case 5:
+            cout << "Sabado\t";
+            break;
+        case 6:
+            cout << "Domingo\t";
+            break;
+        default:
+            break;
+        }
+        for(unsigned int i=0; i<24; i++)
+        {
+            char Codigo[7]={};
+            unsigned int iteradorletras=0;
+            while (iteradorletras<7)
+            {
+                Codigo[iteradorletras]=Horario[(i+(Dia*24))][iteradorletras];
+                iteradorletras+=1;
+            }
+            char Nombre[40]={37,37};
+            MostrarNombreDeCodigo(Codigo, Codigos, Nombres, Nombre);
+        }
+        cout << endl;
+        Dia+=1;
+    }
+}
+*/
+void MostrarNombreDeCodigo(char Codigo[7],char Codigos[20][7], char Nombres[20][40], char Nombre[40])
+{
+    using namespace std;
+    unsigned int Posicion=-1;
+    PosicionCodigo(Codigo,Codigos,&Posicion);
+    unsigned int Iterador=0;
+    while(Iterador<40)
+    {
+        Nombre[Iterador]=Nombres[Posicion][Iterador];
+        Iterador+=1;
+    }
+    cout << "|";
+    if(Codigo[0]!='\0')
+    {
+        cout << Nombre;
+    }
+    else
+    {
+       cout <<"0";
+    }
+    cout << "|\t";
+}
+
+void PosicionCodigo(char Codigo[7], char Codigos[20][7], unsigned int *Posicion)
+{
+    *Posicion=-1;
+    for(unsigned int IteradorCodigos=0; IteradorCodigos<20; IteradorCodigos++)
+    {
+        char Codigo_[7]={};
+        for(int i=0; i<7; i++)
+        {
+            Codigo_[i]=Codigos[IteradorCodigos][i];
+        }
+        for(unsigned int PosicionLetra=0; PosicionLetra<7; PosicionLetra++)
+        {
+            if(Codigo[PosicionLetra]!=Codigos[IteradorCodigos][PosicionLetra])
+            {
+                break;
+            }
+            if(PosicionLetra==6)
+            {
+                *Posicion=IteradorCodigos;
+            }
+        }
+        if(*Posicion!=4294967295)
+        {
+            break;
         }
     }
 }
